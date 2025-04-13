@@ -4,6 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:mobile_shop_management_system/controllers/controllers.dart';
 import 'package:provider/provider.dart';
 
+import '../core/colors.dart';
+import '../global_widgets/custome_button.dart';
+import '../global_widgets/custome_textfield_widget.dart';
+
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
   @override
@@ -31,7 +35,7 @@ class _LoginPageState extends State<LoginPage> {
     final isLoading = context.watch<LoginNotifier>().isLoading;
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Login')),
+
       body: Padding(
         padding: const EdgeInsets.all(20.0),
         child: Center(
@@ -39,50 +43,69 @@ class _LoginPageState extends State<LoginPage> {
             key: _formKey,
             child: Column(
               mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                TextFormField(
-                  controller: _emailController,
-                  decoration: const InputDecoration(
-                    labelText: 'Email',
-                    prefixIcon: Icon(Icons.email),
+                Text(
+                  'Welcome Back!',style: TextStyle(
+                    fontSize: 30,
+                    fontWeight: FontWeight.bold,
+                    color: AppColors.black,
                   ),
+
+                ),
+                const SizedBox(height: 20),
+                CustomTextField(
+                  prefixIconColor: AppColors.black.withOpacity(0.5),
+                  borderRadius: 8,
+                  borderColor: AppColors.black.withOpacity(0.5),
+                  controller: _emailController,
+                  hintText: 'Enter your email',
+                  labelText: 'Email',
+                  prefixIcon: Icons.email,
+                  keyboardType: TextInputType.emailAddress,
                   validator: (value) => (value == null || !value.contains('@'))
-                      ? 'Enter a valid email'
+                      ? 'Please enter a valid email'
                       : null,
                 ),
                 const SizedBox(height: 20),
-                TextFormField(
-                  controller: _passwordController,
+                CustomTextField(
+                  prefixIconColor: AppColors.black.withOpacity(0.5),
                   obscureText: _obscurePassword,
-                  decoration: InputDecoration(
-                    labelText: 'Password',
-                    prefixIcon: const Icon(Icons.lock),
-                    suffixIcon: IconButton(
-                      icon: Icon(_obscurePassword
-                          ? Icons.visibility_off
-                          : Icons.visibility),
-                      onPressed: () {
-                        setState(() {
-                          _obscurePassword = !_obscurePassword;
-                        });
-                      },
+                  borderRadius: 8,
+                  borderColor: AppColors.black.withOpacity(0.5),
+                  controller: _passwordController,
+                  hintText: 'Enter your password',
+                  labelText: 'Password',
+                  prefixIcon: Icons.lock,
+                  suffixIcon:  InkWell(
+                    onTap: () {
+                      setState(() {
+                        _obscurePassword = !_obscurePassword;
+                      });
+                    },
+                    child: Icon(
+                      _obscurePassword ? Icons.visibility : Icons.visibility_off,
+
+                      color: AppColors.black.withOpacity(0.5),
                     ),
                   ),
-                  validator: (value) => (value == null || value.length < 6)
-                      ? 'Password must be at least 6 characters'
+                  keyboardType: TextInputType.emailAddress,
+                  validator: (value) => (value == null || !value.contains('@'))
+                      ? 'Please enter a valid email'
                       : null,
                 ),
                 const SizedBox(height: 30),
-                SizedBox(
+                CustomButton(
                   width: double.infinity,
-                  child: ElevatedButton(
-                    onPressed: isLoading ? null : () => _login(context),
-                    child: isLoading
-                        ? const CircularProgressIndicator(
-                            color: Colors.white,
-                          )
-                        : const Text('Login'),
-                  ),
+                  text: 'Login',
+                  onPressed: (){
+                    if(_formKey.currentState!.validate()){
+                      _login(context);
+                    }
+                  },
+                  backgroundColor: AppColors.black,
+                  textStyle: const TextStyle(fontSize: 18.0,fontWeight: FontWeight.bold),
+                  elevation: 0.0,
                 ),
               ],
             ),
